@@ -1,0 +1,87 @@
+# ===========================
+# 📦 Node.js / Express API
+# ===========================
+
+# Dependências
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Diretórios de cache
+.cache/
+dist/
+coverage/
+.tmp/
+.temp/
+.build/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ambiente / Configurações
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Arquivos de debug
+*.pid
+*.seed
+*.pid.lock
+
+# Uploads e arquivos temporários
+uploads/
+tmp/
+*.tmp
+*.bak
+*.swp
+
+# Testes
+/coverage
+/.nyc_output
+jest-html-reporters-*
+
+# IDEs e editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Sistema operacional
+ehthumbs.db
+Icon?
+*.lnk
+
+# Banco de dados local (caso use dump Mongo)
+dump/
+mongodb-data/
+data/
+db.sqlite
+*.db
+
+# ===========================
+# 🚀 Build / Produção
+# ===========================
+/out
+/build
+/.vercel
+/.next
+/.nuxt
+/hugo_cache
+/public/assets
+
+# ===========================
+# ⚙️ Outros
+# ===========================
+npm-debug.log
+yarn.lock
+package-lock.json

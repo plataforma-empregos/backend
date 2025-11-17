@@ -2,7 +2,6 @@
   "name": "trampomatch-converted",
   "version": "1.0.0",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
@@ -17,8 +16,9 @@
     "express": "^4.18.2",
     "express-rate-limit": "^6.7.0",
     "jsonwebtoken": "^9.0.0",
+    "mongodb": "^7.0.0",
     "mongoose": "^7.0.0",
-    "nodemailer": "^6.9.0",
+    "nodemailer": "^7.0.10",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "speakeasy": "^2.0.0",
@@ -26,6 +26,6 @@
     "swagger-ui-express": "^4.6.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.11"
   }
 }

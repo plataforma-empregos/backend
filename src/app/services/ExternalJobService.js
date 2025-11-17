@@ -1,12 +1,19 @@
-// src/app/services/ExternalJobService.js
 const axios = require("axios");
 
-async function fetchExternalJobs(page = 1, limit = 10) {
+module.exports.fetchExternalJobs = async function (
+  page = 1,
+  limit = 10,
+  keyword,
+  location
+) {
+  const query = `${keyword} ${location || ""}`;
+
   try {
-    console.log("🌐 Buscando vagas da JSearch API...");
+    console.log(`🌐 Buscando vagas da JSearch API para: "${query}"`);
+
     const response = await axios.get("https://jsearch.p.rapidapi.com/search", {
       params: {
-        query: "developer",
+        query: query,
         page: page.toString(),
         num_pages: 1,
       },
@@ -20,12 +27,13 @@ async function fetchExternalJobs(page = 1, limit = 10) {
     const allJobs = response.data.data || [];
 
     const normalized = allJobs.map((job) => ({
+      id: job.job_id,
       title: job.job_title,
       company: job.employer_name,
+      imageUrl: job.employer_logo || "https://via.placeholder.com/60",
+      cityState: job.job_city || job.job_country || "Remoto",
+      type: job.job_employment_type || "Não informado",
       description: job.job_description,
-      location: job.job_city || job.job_country || "Remote",
-      salary: job.job_salary_currency || "N/A",
-      tags: [job.job_employment_type, "JSearch"],
       externalLink: job.job_apply_link,
       source: "JSearch API",
     }));
@@ -41,13 +49,41 @@ async function fetchExternalJobs(page = 1, limit = 10) {
       data: paginated,
     };
   } catch (error) {
-    console.error("Erro ao buscar vagas externas:", error.message);
+    console.error("Erro ao buscar vagas externas (JSearch):", error.message);
     if (error.response) {
       console.error("Código HTTP:", error.response.status);
       console.error("Corpo:", error.response.data);
     }
     throw new Error("Falha ao buscar vagas externas");
   }
-}
+};
 
-module.exports = { fetchExternalJobs };
+module.exports.fetchJobDetails = async function (jobId) {
+  try {
+    console.log(`🌐 Buscando detalhes da vaga JSearch ID: ${jobId}`);
+
+    const response = await axios.get(
+      "https://jsearch.p.rapidapi.com/job-details",
+      {
+        params: {
+          job_id: jobId,
+          extended_publisher_details: "false",
+        },
+        headers: {
+          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+          "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+        },
+        timeout: 10000,
+      }
+    );
+
+    if (response.data?.data?.length > 0) {
+      return response.data.data[0];
+    } else {
+      throw new Error("Vaga não encontrada na JSearch");
+    }
+  } catch (error) {
+    console.error("Erro ao buscar detalhes da vaga (JSearch):", error.message);
+    throw new Error("Falha ao buscar detalhes da vaga externa");
+  }
+};

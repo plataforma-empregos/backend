@@ -7,14 +7,13 @@ const transporter = nodemailer.createTransport({
   secure: false, // TLS
   auth: {
     user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+    pass: process.env.SMTP_PASS,
   },
   tls: {
-    rejectUnauthorized: false // ignora certificados locais
-  }
+    rejectUnauthorized: false,
+  },
 });
 
-// mostra no console se está tudo certo com o SMTP
 transporter.verify(function (error, success) {
   if (error) {
     console.error("❌ Erro ao conectar no servidor SMTP:", error.message);

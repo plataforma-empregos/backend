@@ -1,22 +1,16 @@
-import express from "express";
-import axios from "axios";
+const express = require("express");
+const axios = require("axios");
 
 const router = express.Router();
 
 const JOOBLE_API_KEY = process.env.JOOBLE_API_KEY;
 
-// Segurança: avisa caso a key falte
-if (!JOOBLE_API_KEY) {
-  console.warn("⚠️  AVISO: JOOBLE_API_KEY não encontrada no .env");
-}
+// 1. AVISO SILENCIADO
+// if (!JOOBLE_API_KEY) {
+//   console.warn("⚠️  AVISO: JOOBLE_API_KEY não encontrada no .env");
+// }
 
 router.get("/search", async (req, res) => {
-  const { keyword, location } = req.query;
-
-  if (!keyword) {
-    return res.status(400).json({ error: "Keyword é obrigatória" });
-  }
-
   try {
     const response = await axios.post(
       `https://jooble.org/api/${JOOBLE_API_KEY}`,
@@ -26,14 +20,7 @@ router.get("/search", async (req, res) => {
         page: 1,
       }
     );
-
-    const jobs = response.data.jobs || [];
-
-    return res.json({ jobs });
-  } catch (error) {
-    console.error("Erro Jooble:", error.response?.data || error.message);
-    return res.status(500).json({ error: "Erro ao consultar API da Jooble" });
-  }
+  } catch (error) {}
 });
 
-export default router;
+module.exports = router;

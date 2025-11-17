@@ -1,14 +1,23 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { jwtSecret, jwtExpiresIn, refreshExpiresIn } = require("../config/auth");
-
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const crypto = require("crypto");
+const { body, validationResult } = require("express-validator");
+const User = require("../models/User");
+const { jwtSecret, jwtExpiresIn, refreshExpiresIn } = require("../config/auth");
+const { OAuth2Client } = require("google-auth-library");
 
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// Função para gerar tokens JWT
 function signToken(payload, expiresIn = jwtExpiresIn) {
   return jwt.sign(payload, jwtSecret, { expiresIn });
 }
 
+// Opções de cookies
 const cookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
@@ -115,4 +124,5 @@ module.exports = {
     });
     return res.status(200).json({ ok: true });
   },
+
 };

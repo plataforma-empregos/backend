@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const Schema = mongoose.Schema;
 
 const ProfileSchema = new Schema(
@@ -15,9 +16,19 @@ const ProfileSchema = new Schema(
 );
 
 const UserSchema = new Schema({
-  name: String,
-  email: { type: String, unique: true, index: true, required: true },
-  password: String,
+  name: { type: String, required: [true, "Nome é obrigatório"] },
+  email: {
+    type: String,
+    unique: true,
+    index: true,
+    required: [true, "E-mail é obrigatório"],
+    match: [/.+\@.+\..+/, "E-mail inválido"],
+  },
+  password: {
+    type: String,
+    required: [true, "Senha é obrigatória"],
+    minlength: [6, "A senha deve ter no mínimo 6 caracteres"],
+  },
   profile: ProfileSchema,
   refreshTokens: [{ token: String, createdAt: Date }],
   twoFA: { enabled: { type: Boolean, default: false }, secret: String },
@@ -25,7 +36,7 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
+  if (this.isModified("password") && !this.password.startsWith("$2a$")) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
@@ -34,6 +45,29 @@ UserSchema.pre("save", async function (next) {
 
 UserSchema.methods.checkPassword = function (password) {
   return bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.addRefreshToken = async function (token) {
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  this.refreshTokens.push({ token: hashedToken, createdAt: new Date() });
+  await this.save();
+};
+
+UserSchema.methods.checkRefreshToken = function (token) {
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  return this.refreshTokens.some((t) => t.token === hashedToken);
+};
+
+UserSchema.methods.removeExpiredTokens = function () {
+  const now = new Date();
+  this.refreshTokens = this.refreshTokens.filter(
+    (t) => now - new Date(t.createdAt) < 7 * 24 * 60 * 60 * 1000 // 7 dias
+  );
+};
+
+UserSchema.methods.updateProfile = async function (profileData) {
+  this.profile = { ...this.profile, ...profileData };
+  await this.save();
 };
 
 module.exports = mongoose.model("User", UserSchema);

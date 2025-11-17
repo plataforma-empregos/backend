@@ -1,0 +1,83 @@
+console.log("DIRNAME DO SEED:", __dirname);
+
+const path = require("path");
+const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose");
+
+const dotEnvPath = path.resolve(__dirname, "../../../.env");
+require("dotenv").config({ path: dotEnvPath });
+
+const User = require("../../app/models/User");
+const Job = require("../../app/models/Job");
+
+if (process.env.NODE_ENV === "production") {
+  console.error("❌ Não é permitido rodar o seed em produção.");
+  process.exit(1);
+}
+
+async function createDemoUser() {
+  const hashedPassword = await bcrypt.hash("123456", 10);
+  return User.create({
+    email: "demo@demo.com",
+    password: hashedPassword,
+    name: "Demo User",
+    profile: {
+      name: "Demo User",
+      preferences: { theme: "light", notifications: true },
+    },
+  });
+}
+
+async function createJobsForUser(userId) {
+  await Job.create([
+    {
+      title: "Frontend Developer",
+      description: "React dev",
+      company: "Acme",
+      salary: 3000,
+      tags: ["react", "frontend"],
+      owner: userId,
+    },
+    {
+      title: "Backend Developer",
+      description: "Node.js dev",
+      company: "Acme",
+      salary: 4000,
+      tags: ["node", "backend"],
+      owner: userId,
+    },
+  ]);
+}
+
+(async () => {
+  if (!process.env.MONGO_URI) {
+    console.error("❌ ERRO: MONGO_URI não definida no .env.");
+    process.exit(1);
+  }
+
+  try {
+    console.log("🔄 Conectando ao MongoDB...");
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ Conexão estabelecida.");
+
+    console.log("🔄 Limpando coleções...");
+    await User.deleteMany({});
+    await Job.deleteMany({});
+    console.log("✅ Coleções limpas.");
+
+    console.log("🔄 Criando usuário demo...");
+    const u = await createDemoUser();
+    console.log(`✅ Usuário criado: ${u.email}`);
+
+    console.log("🔄 Criando empregos...");
+    await createJobsForUser(u._id);
+    console.log("✅ Empregos criados.");
+
+    console.log("✅ Seed completo.");
+  } catch (err) {
+    console.error("❌ Erro ao rodar o seed:", err.message);
+  } finally {
+    await mongoose.disconnect();
+    process.exit(0);
+  }
+})();

@@ -16,12 +16,6 @@ Com documentação completa no Swagger, autenticação JWT, envio de e-mails e i
 ## 🧠 Demonstração Visual
 
 ### 📘 Interface do Swagger
-![Swagger UI](https://static1.smartbear.co/swagger/media/assets/images/swagger_logo.svg)
-
-### 📨 Fluxo de Recuperação de Senha
-![Nodemailer](https://raw.githubusercontent.com/nodemailer/nodemailer/master/assets/nm_logo_200x136.png)
-
-### 📘 Interface do Swagger
 <img src="https://static1.smartbear.co/swagger/media/assets/images/swagger_logo.svg" width="180" />
 
 ### 📨 Fluxo de Recuperação de Senha

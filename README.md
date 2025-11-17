@@ -16,9 +16,13 @@ Com documentação completa no Swagger, autenticação JWT, envio de e-mails e i
 ## 🧠 Demonstração Visual
 
 ### 📘 Interface do Swagger
+
 ![Swagger UI](https://raw.githubusercontent.com/github/explore/main/topics/swagger/swagger.png)
 
 ### 📨 Fluxo de Recuperação de Senha
+
+<img src="https://raw.githubusercontent.com/nodemailer/nodemailer/master/assets/nm_logo_200x136.png" width="180" />
+
 ![E-mail](https://raw.githubusercontent.com/github/explore/main/topics/nodemailer/nodemailer.png)
 
 ---
@@ -36,14 +40,14 @@ Com documentação completa no Swagger, autenticação JWT, envio de e-mails e i
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Categoria | Tecnologias |
-|------------|--------------|
-| **Backend** | Node.js, Express.js |
-| **Banco de Dados** | MongoDB (Mongoose) |
-| **Autenticação** | JWT, bcrypt, 2FA (speakeasy) |
-| **Documentação** | Swagger (swagger-jsdoc + swagger-ui-express) |
-| **Integração Externa** | API pública JSearch (RapidAPI) |
-| **Envio de E-mails** | Nodemailer (SMTP Gmail) |
+| Categoria              | Tecnologias                                  |
+| ---------------------- | -------------------------------------------- |
+| **Backend**            | Node.js, Express.js                          |
+| **Banco de Dados**     | MongoDB (Mongoose)                           |
+| **Autenticação**       | JWT, bcrypt, 2FA (speakeasy)                 |
+| **Documentação**       | Swagger (swagger-jsdoc + swagger-ui-express) |
+| **Integração Externa** | API pública JSearch (RapidAPI)               |
+| **Envio de E-mails**   | Nodemailer (SMTP Gmail)                      |
 
 ---
 
@@ -52,7 +56,7 @@ Com documentação completa no Swagger, autenticação JWT, envio de e-mails e i
 ```bash
 # 1️⃣ Clonar o repositório
 git clone https://github.com/plataforma-empregos/backend.git
-cd trampomatch
+cd backend
 
 # 2️⃣ Instalar dependências
 npm install
@@ -70,7 +74,8 @@ npm run dev
 
 ```env
 PORT=3000
-MONGO_URI=mongodb://localhost:27017/trampomatch
+Cole sua string de conexão do MongoDB Atlas aqui
+MONGO_URI=""
 JWT_SECRET=teste1234567890
 JWT_EXPIRES_IN=15m
 REFRESH_TOKEN_EXPIRES_IN=7d
@@ -79,9 +84,12 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=seuemail@gmail.com
 SMTP_PASS=sua_senha_de_app
-RAPIDAPI_KEY=sua_chave_rapidapi_aqui
+Chaves de APIs Externas (OBRIGATÓRIO para Vagas e Google)
+GOOGLE_CLIENT_ID="SEU_ID_DO_GOOGLE_CLIENT_AQUI.apps.googleusercontent.com"
+RAPIDAPI_KEY="SUA_CHAVE_RAPIDAPI_AQUI"
 BASE_URL=http://localhost:3000
 ```
+
 ---
 
 ## 🧭 Swagger UI

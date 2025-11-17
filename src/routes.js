@@ -9,6 +9,7 @@ const ExternalJobController = require("./app/controllers/ExternalJobController")
 router.post("/auth/register", AuthController.register);
 router.post("/auth/login", AuthController.login);
 router.post("/auth/logout", AuthController.logout);
+router.post("/auth/google", AuthController.googleLogin); //Necessária para realizar o login com o Google
 
 router.get("/users", auth, UserController.list);
 router.get("/users/me", auth, UserController.me);

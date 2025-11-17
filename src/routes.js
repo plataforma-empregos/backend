@@ -20,11 +20,9 @@ router.post(
 
 router.post("/auth/login", AuthController.login);
 router.post("/auth/logout", AuthController.logout);
-<<<<<<< Updated upstream
 router.post("/auth/google", AuthController.googleLogin); //Necessária para realizar o login com o Google
 =======
-router.post("/auth/google", AuthController.googleLogin);
->>>>>>> Stashed changes
+router.post("/auth/google", AuthController.googleLogin); //Necessária para realizar o login com o Google
 
 // Rotas de usuários
 router.get("/users", auth, UserController.list);

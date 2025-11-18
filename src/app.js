@@ -8,12 +8,13 @@ const cors = require("cors");
 
 const joobleRoutes = require("./routes/jobRoutes");
 
+const newsletterRoutes = require("./routes/newsletterRoutes");
+
 const app = express();
 
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
-
     credentials: true,
   })
 );
@@ -23,7 +24,12 @@ app.use(cookieParser());
 app.use(rateLimit({ windowMs: 60 * 1000, max: 200 }));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use("/api", routes);
+
 app.use("/api/jooble", joobleRoutes);
+
+// Rota da Newsletter
+app.use("/api/newsletter", newsletterRoutes);
 
 module.exports = app;

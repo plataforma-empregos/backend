@@ -6,20 +6,21 @@ module.exports.fetchExternalJobs = async function (
   keyword,
   location
 ) {
-  const query = `${keyword} ${location || ""}`;
+  const query = `${keyword} ${location || ""}`.trim();
 
   try {
     console.log(`🌐 Buscando vagas da JSearch API para: "${query}"`);
+    console.log("🔑 RAPIDAPI_KEY carregada?", !!process.env.RAPIDAPI_KEY);
 
     const response = await axios.get("https://jsearch.p.rapidapi.com/search", {
       params: {
-        query: query,
+        query,
         page: page.toString(),
         num_pages: 1,
       },
       headers: {
-        "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-        "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+        "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+        "x-rapidapi-host": "jsearch.p.rapidapi.com",
       },
       timeout: 15000,
     });
@@ -49,11 +50,13 @@ module.exports.fetchExternalJobs = async function (
       data: paginated,
     };
   } catch (error) {
-    console.error("Erro ao buscar vagas externas (JSearch):", error.message);
+    console.error("❌ Erro ao buscar vagas externas (JSearch):", error.message);
+
     if (error.response) {
       console.error("Código HTTP:", error.response.status);
-      console.error("Corpo:", error.response.data);
+      console.error("Resposta da API:", error.response.data);
     }
+
     throw new Error("Falha ao buscar vagas externas");
   }
 };
@@ -70,8 +73,8 @@ module.exports.fetchJobDetails = async function (jobId) {
           extended_publisher_details: "false",
         },
         headers: {
-          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-          "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+          "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+          "x-rapidapi-host": "jsearch.p.rapidapi.com",
         },
         timeout: 10000,
       }
@@ -83,7 +86,13 @@ module.exports.fetchJobDetails = async function (jobId) {
       throw new Error("Vaga não encontrada na JSearch");
     }
   } catch (error) {
-    console.error("Erro ao buscar detalhes da vaga (JSearch):", error.message);
+    console.error("❌ Erro ao buscar detalhes da vaga externa:", error.message);
+
+    if (error.response) {
+      console.error("Código HTTP:", error.response.status);
+      console.error("Detalhes:", error.response.data);
+    }
+
     throw new Error("Falha ao buscar detalhes da vaga externa");
   }
 };

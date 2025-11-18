@@ -7,13 +7,14 @@ const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 
 const joobleRoutes = require("./routes/jobRoutes");
+const newsletterRoutes = require("./routes/newsletterRoutes");
+const contactRoutes = require("./routes/contactRoutes"); // ✅ NOVO
 
 const app = express();
 
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
-
     credentials: true,
   })
 );
@@ -23,7 +24,17 @@ app.use(cookieParser());
 app.use(rateLimit({ windowMs: 60 * 1000, max: 200 }));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Rotas principais agrupadas
 app.use("/api", routes);
+
+// Outras rotas específicas
 app.use("/api/jooble", joobleRoutes);
+
+// Newsletter
+app.use("/api/newsletter", newsletterRoutes);
+
+// Contate-nos
+app.use("/api/contact", contactRoutes); // ✅ NOVO
 
 module.exports = app;

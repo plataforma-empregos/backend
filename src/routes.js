@@ -1,28 +1,24 @@
 const express = require("express");
-const { body, param } = require("express-validator");
+const { param } = require("express-validator");
 const router = express.Router();
+
 const AuthController = require("./app/controllers/AuthController");
 const UserController = require("./app/controllers/UserController");
 const JobController = require("./app/controllers/JobController");
 const auth = require("./app/middlewares/auth");
 
+// Rotas de autenticação
 router.post(
   "/auth/register",
-  [
-    body("email").isEmail().withMessage("E-mail inválido"),
-    body("password")
-      .isLength({ min: 6 })
-      .withMessage("Senha deve ter no mínimo 6 caracteres"),
-    body("name").notEmpty().withMessage("Nome é obrigatório"),
-  ],
+  AuthController.validateRegister,
   AuthController.register
 );
-
-router.post("/auth/login", AuthController.login);
+router.post("/auth/login", AuthController.validateLogin, AuthController.login);
 router.post("/auth/logout", AuthController.logout);
-router.post("/auth/google", AuthController.googleLogin); //Necessária para realizar o login com o Google
-=======
-router.post("/auth/google", AuthController.googleLogin); //Necessária para realizar o login com o Google
+router.post("/auth/google", AuthController.googleLogin); // Login com Google
+
+//Token Refresh
+router.post("/auth/refresh", AuthController.refreshToken);
 
 // Rotas de usuários
 router.get("/users", auth, UserController.list);

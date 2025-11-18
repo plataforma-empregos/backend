@@ -2,6 +2,7 @@ const express = require("express");
 const { param } = require("express-validator");
 const router = express.Router();
 
+const ExternalJobController = require("./app/controllers/ExternalJobController");
 const AuthController = require("./app/controllers/AuthController");
 const UserController = require("./app/controllers/UserController");
 const JobController = require("./app/controllers/JobController");
@@ -41,5 +42,9 @@ router.get("/jobs", JobController.list);
 router.get("/jobs/:id", JobController.get);
 router.put("/jobs/:id", auth, JobController.update);
 router.delete("/jobs/:id", auth, JobController.remove);
+
+// Rotas de vagas externas (JSearch)
+router.get("/external-jobs", ExternalJobController.list);
+router.get("/external-jobs/:id", ExternalJobController.get);
 
 module.exports = router;
